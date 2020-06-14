@@ -3,10 +3,12 @@ package activity
 import (
 	"net/http"
 
+	"github.com/dzikrisyafi/kursusvirtual_oauth-go/oauth"
 	"github.com/dzikrisyafi/kursusvirtual_topics-api/src/domain/activity"
 	"github.com/dzikrisyafi/kursusvirtual_topics-api/src/services"
 	"github.com/dzikrisyafi/kursusvirtual_utils-go/controller_utils"
 	"github.com/dzikrisyafi/kursusvirtual_utils-go/rest_errors"
+	"github.com/dzikrisyafi/kursusvirtual_utils-go/rest_resp"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,7 +26,8 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, result)
+	resp := rest_resp.NewStatusCreated("success create new activity", result.Marshall(oauth.IsPublic(c.Request)))
+	c.JSON(resp.Status(), resp)
 }
 
 func Get(c *gin.Context) {
@@ -40,7 +43,8 @@ func Get(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, activity)
+	resp := rest_resp.NewStatusOK("success get activity data", activity.Marshall(oauth.IsPublic(c.Request)))
+	c.JSON(resp.Status(), resp)
 }
 
 func Update(c *gin.Context) {
@@ -65,7 +69,8 @@ func Update(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, result)
+	resp := rest_resp.NewStatusOK("success update activity", result.Marshall(oauth.IsPublic(c.Request)))
+	c.JSON(resp.Status(), resp)
 }
 
 func Delete(c *gin.Context) {
