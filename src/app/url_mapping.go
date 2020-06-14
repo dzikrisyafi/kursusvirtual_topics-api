@@ -12,7 +12,7 @@ func mapUrls() {
 	router.PATCH("/sections/:section_id", sections.Update)
 	router.DELETE("/sections/:section_id", sections.Delete)
 	router.GET("/internal/sections/:course_id", sections.GetAll)
-	router.DELETE("/internal/sections/:course_id")
+	router.DELETE("/internal/sections/:course_id", sections.DeleteAll)
 
 	router.POST("/activity", activity.Create)
 	router.GET("/activity/:activity_id", activity.Get)

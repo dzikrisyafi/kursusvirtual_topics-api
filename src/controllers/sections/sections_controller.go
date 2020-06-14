@@ -98,3 +98,18 @@ func Delete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, map[string]interface{}{"message": "success deleted section", "status": http.StatusOK})
 }
+
+func DeleteAll(c *gin.Context) {
+	courseID, idErr := controller_utils.GetIDInt(c.Param("course_id"), "course id")
+	if idErr != nil {
+		c.JSON(idErr.Status(), idErr)
+		return
+	}
+
+	if err := services.SectionsService.DeleteSectionByCourseID(courseID); err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{"message": "success deleted section", "status": http.StatusOK})
+}

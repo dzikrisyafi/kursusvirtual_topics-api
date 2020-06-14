@@ -18,6 +18,7 @@ type sectionsServiceInterface interface {
 	GetAllActivity(*sections.CourseSection) rest_errors.RestErr
 	UpdateSection(bool, sections.Section) (*sections.Section, rest_errors.RestErr)
 	DeleteSection(int) rest_errors.RestErr
+	DeleteSectionByCourseID(int) rest_errors.RestErr
 }
 
 func (s *sectionsService) CreateSection(section sections.Section) (*sections.Section, rest_errors.RestErr) {
@@ -98,4 +99,9 @@ func (s *sectionsService) UpdateSection(isPartial bool, section sections.Section
 func (s *sectionsService) DeleteSection(sectionID int) rest_errors.RestErr {
 	dao := &sections.Section{ID: sectionID}
 	return dao.Delete()
+}
+
+func (s *sectionsService) DeleteSectionByCourseID(courseID int) rest_errors.RestErr {
+	dao := &sections.Section{CourseID: courseID}
+	return dao.DeleteByCourseID()
 }

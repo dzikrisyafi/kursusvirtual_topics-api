@@ -10,12 +10,13 @@ import (
 )
 
 const (
-	queryInsertSection         = `INSERT INTO sections(name, course_id) VALUES(?, ?);`
-	queryGetSection            = `SELECT name, course_id FROM sections WHERE id=?;`
-	queryGetSectionsByCourseID = `SELECT id, name, course_id FROM sections WHERE course_id=?;`
-	queryGetAllActivity        = `SELECT id, name, hide FROM activity WHERE section_id=?;`
-	queryUpdateSection         = `UPDATE sections SET name=?, course_id=? WHERE id=?;`
-	queryDeleteSection         = `DELETE FROM sections WHERE id=?;`
+	queryInsertSection           = `INSERT INTO sections(name, course_id) VALUES(?, ?);`
+	queryGetSection              = `SELECT name, course_id FROM sections WHERE id=?;`
+	queryGetSectionsByCourseID   = `SELECT id, name, course_id FROM sections WHERE course_id=?;`
+	queryGetAllActivity          = `SELECT id, name, hide FROM activity WHERE section_id=?;`
+	queryUpdateSection           = `UPDATE sections SET name=?, course_id=? WHERE id=?;`
+	queryDeleteSection           = `DELETE FROM sections WHERE id=?;`
+	queryDeleteSectionByCourseID = `DELETE FROM sections WHERE course_id=?;`
 )
 
 func (section *Section) Save() rest_errors.RestErr {
@@ -151,6 +152,22 @@ func (section *Section) Delete() rest_errors.RestErr {
 
 	if _, err := stmt.Exec(section.ID); err != nil {
 		logger.Error("error when trying to delete section by id", err)
+		return rest_errors.NewInternalServerError("error when trying to delete section", errors.New("database error"))
+	}
+
+	return nil
+}
+
+func (section *Section) DeleteByCourseID() rest_errors.RestErr {
+	stmt, err := topics_db.DbConn().Prepare(queryDeleteSectionByCourseID)
+	if err != nil {
+		logger.Error("error when trying to prepare delete section by course id statement", err)
+		return rest_errors.NewInternalServerError("error when trying to delete section", errors.New("database error"))
+	}
+	defer stmt.Close()
+
+	if _, err := stmt.Exec(section.CourseID); err != nil {
+		logger.Error("error when trying to delete section by course id", err)
 		return rest_errors.NewInternalServerError("error when trying to delete section", errors.New("database error"))
 	}
 
