@@ -68,7 +68,7 @@ func (s *activityService) UpdateActivity(isPartial bool, activity activity.Activ
 			current.SectionID = activity.SectionID
 		}
 
-		if isHide >= 0 {
+		if isHide == 0 || isHide == 1 {
 			current.Hide = activity.Hide
 		}
 	} else {

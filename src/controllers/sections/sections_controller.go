@@ -26,7 +26,7 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	resp := rest_resp.NewStatusCreated("success create new section", result.Marshall(oauth.IsPublic(c.Request)))
+	resp := rest_resp.NewStatusCreated("success created new section", result.Marshall(oauth.IsPublic(c.Request)))
 	c.JSON(resp.Status(), resp)
 }
 
@@ -86,7 +86,7 @@ func Update(c *gin.Context) {
 		return
 	}
 
-	resp := rest_resp.NewStatusOK("success update section data", result.Marshall(oauth.IsPublic(c.Request)))
+	resp := rest_resp.NewStatusOK("success updated section data", result.Marshall(oauth.IsPublic(c.Request)))
 	c.JSON(resp.Status(), resp)
 }
 
@@ -112,10 +112,8 @@ func DeleteAll(c *gin.Context) {
 		return
 	}
 
-	if err := services.SectionsService.DeleteSectionByCourseID(courseID); err != nil {
+	if err := services.SectionsService.DeleteSectionByCourseID(courseID, c.Query("access_token")); err != nil {
 		c.JSON(err.Status(), err)
 		return
 	}
-
-	c.JSON(http.StatusOK, map[string]interface{}{"message": "success deleted section", "status": http.StatusOK})
 }
